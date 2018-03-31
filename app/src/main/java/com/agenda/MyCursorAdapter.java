@@ -62,7 +62,7 @@ public class MyCursorAdapter extends CursorAdapter
         btnDeleteTask = (Button)v.findViewById(R.id.btnDeleteTask);
         txtDescV.setText(taskDescStr);
         txtDateV.setText(taskDateStr);
-        MyClkListener listen = new MyClkListener(taskID, db, this, parent);
+        MyClkListener listen = new MyClkListener(taskID, db, this, parent, cursor);
         btnDeleteTask.setOnClickListener(listen);
         return v;
     }
@@ -95,15 +95,18 @@ public class MyCursorAdapter extends CursorAdapter
         long rowsAffected;
         MyCursorAdapter curAdapter;
         ListView v;
+        Cursor cursor;
+
 
         //constructor to pass user ID to listener for each btn
-        public MyClkListener(int taskID, db db, MyCursorAdapter adapter, ViewGroup parent)
+        public MyClkListener(int taskID, db db, MyCursorAdapter adapter, ViewGroup parent, Cursor cursor)
         {
             this.taskIdStr = String.valueOf(taskID);
             this.taskId = taskID;
             this.db = db;
             this.v = (ListView) parent;
             curAdapter = adapter;
+            this.cursor = cursor;
         }
 
         @Override
@@ -122,8 +125,11 @@ public class MyCursorAdapter extends CursorAdapter
             //ctx.startActivity(i);
             //((Activity)ctx).finish();
 
-            //curAdapter.runQueryOnBackgroundThread(null);
+            //refresh ListView
+            cursor.requery();
             curAdapter.notifyDataSetChanged();//not refreshing!!!
+
+            //curAdapter.runQueryOnBackgroundThread(null);
             //v.invalidateViews();//not refreshing!!!
         }
     }

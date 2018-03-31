@@ -3,8 +3,10 @@ package com.agenda;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ public class Main extends AppCompatActivity {
 
     //region >>> Variables
     db db;
+    Cursor cursor;
     ContentValues values;
     long rowsAffected;
     TextView txt;
@@ -28,7 +31,7 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //AppCompatDelegate.setCompatVectorFromResourcesEnabled(true); //https://stackoverflow.com/questions/47526417/binary-xml-file-line-0-error-inflating-class-imageview
 
         //getApplication().deleteDatabase("myDb");//ONLY if db gets corupt then uncomment this line & run to delete db
 
@@ -39,32 +42,51 @@ public class Main extends AppCompatActivity {
 
         //find all students
         String sql = "select userId AS _id, firstName, status from users JOIN payments using (userId);";
-        Cursor c = db.getAll();
-        c.moveToFirst();
-        int index = c.getColumnIndex("_desc");
-        String aDescription = c.getString(index);
+        cursor = db.getAll();
+        cursor.moveToFirst();
+        int index = cursor.getColumnIndex("_desc");
+        String aDescription = cursor.getString(index);
 
-        //region >>> refreshing the list after an item deleted is NOT working
-        /* myCurAdaptor.registerDataSetObserver(new DataSetObserver() {
+
+        //set CursorAdapter for ListView
+        myCurAdaptor = new MyCursorAdapter(this, cursor);
+        listV.setAdapter(myCurAdaptor);
+
+
+        //region >>> Leave empty listener or else app crashes!!! - refreshing the list after an item deleted is NOT working
+  /*      myCurAdaptor.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged()
             {
-                super.onChanged();
+                //super.onChanged();
 
-                Cursor cur = db.getAll();
-                cur.moveToFirst();
 
-                myCurAdaptor.swapCursor(cur);
+                //cursor.requery();
+                //cursor.close();
+                //myCurAdaptor.notifyDataSetChanged();
+                //cursor.close();
+
+
+                //cursor = db.getAll();
+                //cursor.moveToFirst();
+                //myCurAdaptor.changeCursor(cursor);
+
+
+                //myCurAdaptor.set
+                //myCurAdaptor.changeCursor(cursor);// swapCursor(cursor);
+
+                //set CursorAdapter for ListView
+                //myCurAdaptor = new MyCursorAdapter(getBaseContext(), cur);
+                //listV.setAdapter(myCurAdaptor);
+
+
+                //listV.invalidateViews();
             }
         });*/
 
         //reQuery cursor
         //c.requery();
         //endregion
-
-        //set CursorAdapter for ListView
-        myCurAdaptor = new MyCursorAdapter(this, c);
-        listV.setAdapter(myCurAdaptor);
     }
 
     //Create new task

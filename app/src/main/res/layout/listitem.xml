@@ -20,12 +20,18 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorTaskDesc"/>
 
+
+        <!--this works in emulator BUT crashes on phone : https://stackoverflow.com/questions/47526417/binary-xml-file-line-0-error-inflating-class-imageview
+        solu is to paste img in drawabl instead of drawable-v2
+        android:background="@drawable/checkmark"
+        -->
        <Button
            android:id="@+id/btnDeleteTask"
            android:layout_weight="0.1"
            android:layout_width="0dip"
            android:layout_height="40dp"
-           android:background="@drawable/checkmark"/>
+           android:background="@drawable/checkmark"
+           />
     </LinearLayout>
 
 </LinearLayout>
