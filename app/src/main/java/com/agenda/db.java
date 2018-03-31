@@ -67,19 +67,20 @@ public class db extends SQLiteOpenHelper
             "insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
              "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
              "insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
-             "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);",
-            "insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);",
-            "insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);",
-            "insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
-            "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);"
+             "insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);"
+
+            //,"insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES  ('do grocery' , 1522800000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due' , 1459728000);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('do grocery', 1514764800);",
+            //"insert into tasks(  _desc , _datetime ) VALUES ('Assignment due', 1515024000);"
     };
     //endregion
 

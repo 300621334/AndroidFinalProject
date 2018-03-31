@@ -2,6 +2,7 @@ package com.agenda;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -23,7 +25,9 @@ import java.util.Locale;
 public class Task extends AppCompatActivity {
 
     //region >>> Variables
-    Long dateTimeUnix;
+    db db;
+    ContentValues insertValues;
+    Long dateTimeUnix, rowsIdCreated;
     TextView dateTxtV, timeTxtV;
     EditText descTxtV;
     Calendar cal;
@@ -36,6 +40,8 @@ public class Task extends AppCompatActivity {
         setContentView(R.layout.activity_task);
 
         //region >>> Task Description set-up
+        db =new db(this);
+        insertValues = new ContentValues();
         descTxtV = (EditText)findViewById(R.id.txtDescription);
         //endregion
 
@@ -168,13 +174,26 @@ public class Task extends AppCompatActivity {
         System.out.println("Today is " +date.getTime());*/
         //endregion
 
+        if(!descriptionStr.trim().equals(""))
+        {
+            //save to database
+            insertValues.put("_desc", descriptionStr);
+            insertValues.put("_datetime", dateTimeUnix);
+            rowsIdCreated = db.addRow(insertValues);
+            Toast.makeText(this, "Row created with ID:" + rowsIdCreated, Toast.LENGTH_LONG).show();
 
-        //save to database
+            //move back to main activity
+            Intent i = new Intent(this, Main.class);
+            //temporary testing activity
+            //Intent i = new Intent(this, Testing.class);
+            startActivity(i);
+        }
+        else
+        {
+            Toast.makeText(this, "Description is empty" , Toast.LENGTH_LONG).show();
+        }
 
-        //move back to main activity
-        Intent i = new Intent(this, Main.class);
-        //temporary testing activity
-        //Intent i = new Intent(this, Testing.class);
-        startActivity(i);
+
+
     }
 }

@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,13 +56,13 @@ public class MyCursorAdapter extends CursorAdapter
 
         //inflate xml template for each item in ListView
         LayoutInflater inflator = LayoutInflater.from(ctx);
-        View v = inflator.inflate(R.layout.listitem, parent, false);
+        View v = inflator.inflate(R.layout.listitem, parent, false);//v is LinearLayout of template
         txtDateV = (TextView)v.findViewById(R.id.txtDateTime);
         txtDescV = (TextView)v.findViewById(R.id.txtTaskDesc);
         btnDeleteTask = (Button)v.findViewById(R.id.btnDeleteTask);
         txtDescV.setText(taskDescStr);
         txtDateV.setText(taskDateStr);
-        MyClkListener listen = new MyClkListener(taskID, db);
+        MyClkListener listen = new MyClkListener(taskID, db, this, parent);
         btnDeleteTask.setOnClickListener(listen);
         return v;
     }
@@ -91,13 +93,17 @@ public class MyCursorAdapter extends CursorAdapter
         int taskId;
         db db;
         long rowsAffected;
+        MyCursorAdapter curAdapter;
+        ListView v;
 
         //constructor to pass user ID to listener for each btn
-        public MyClkListener(int taskID, db db)
+        public MyClkListener(int taskID, db db, MyCursorAdapter adapter, ViewGroup parent)
         {
             this.taskIdStr = String.valueOf(taskID);
             this.taskId = taskID;
             this.db = db;
+            this.v = (ListView) parent;
+            curAdapter = adapter;
         }
 
         @Override
@@ -110,11 +116,15 @@ public class MyCursorAdapter extends CursorAdapter
             rowsAffected = db.deleteRow(taskIdStr);
             Toast.makeText(ctx, rowsAffected + " rows deleted", Toast.LENGTH_LONG).show();
 
-            Intent i = new Intent(ctx, Task.class);
+            //Intent i = new Intent(ctx, Task.class);
             SharedPreferences prefs = ctx.getSharedPreferences("tasks",0);
             prefs.edit().putInt("taskID", taskID).commit();
-            ctx.startActivity(i);
-            ((Activity)ctx).finish();
+            //ctx.startActivity(i);
+            //((Activity)ctx).finish();
+
+            //curAdapter.runQueryOnBackgroundThread(null);
+            curAdapter.notifyDataSetChanged();//not refreshing!!!
+            //v.invalidateViews();//not refreshing!!!
         }
     }
 }

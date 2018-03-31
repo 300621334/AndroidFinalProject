@@ -29,6 +29,9 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //getApplication().deleteDatabase("myDb");//ONLY if db gets corupt then uncomment this line & run to delete db
+
         //initialize db helper class
         db = new db(getApplicationContext());
         listV = (ListView)findViewById(R.id.listV);
@@ -40,6 +43,24 @@ public class Main extends AppCompatActivity {
         c.moveToFirst();
         int index = c.getColumnIndex("_desc");
         String aDescription = c.getString(index);
+
+        //region >>> refreshing the list after an item deleted is NOT working
+        /* myCurAdaptor.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged()
+            {
+                super.onChanged();
+
+                Cursor cur = db.getAll();
+                cur.moveToFirst();
+
+                myCurAdaptor.swapCursor(cur);
+            }
+        });*/
+
+        //reQuery cursor
+        //c.requery();
+        //endregion
 
         //set CursorAdapter for ListView
         myCurAdaptor = new MyCursorAdapter(this, c);

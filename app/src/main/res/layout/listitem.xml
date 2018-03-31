@@ -17,7 +17,8 @@
             android:id="@+id/txtTaskDesc"
             android:layout_weight="0.9"
             android:layout_width="0dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTaskDesc"/>
 
        <Button
            android:id="@+id/btnDeleteTask"
