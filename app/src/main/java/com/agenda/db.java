@@ -58,7 +58,7 @@ public class db extends SQLiteOpenHelper
     //endregion
 
     //region >>> variables
-    static final String DbName = "myDb",tblName = " tasks ", id_col=" _id ", sqlSelectAll = "select * from tasks";
+    static final String DbName = "myDb",tblName = " tasks ", id_col=" _id ", sqlSelectAll = "select * from tasks order by _datetime";
     static int version = 1;
     long rowsAfected;
     String[] createTbls = {"create table "+ tblName +"( _id INTEGER PRIMARY KEY AUTOINCREMENT, _isdone INTEGER default 0, _desc TEXT, _datetime INTEGER);"}

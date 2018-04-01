@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,17 +28,24 @@ public class Task extends AppCompatActivity {
     //region >>> Variables
     db db;
     ContentValues insertValues;
-    Long dateTimeUnix, rowsIdCreated;
+    int taskId;
+    Long dateTimeUnix, rowsIdCreated, rowsAffected;
     TextView dateTxtV, timeTxtV;
     EditText descTxtV;
     Calendar cal;
     String dateStr, timeStr, dateTimeStr, descriptionStr;
+    boolean isEditing = false;
     //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        //region >>> decide whether this activity started for new task or editing an existing task
+        taskId = getIntent().getIntExtra("taskId", 0);
+        isEditing = (taskId != 0);
+        //endregion
 
         //region >>> Task Description set-up
         db =new db(this);
@@ -85,8 +93,8 @@ public class Task extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker timePicker, int _24hr, int min)
             {
-                cal.set(Calendar.HOUR, _24hr);//auto converts 24hr  tie into 12hr time. But we need to set AM/PM
-                cal.set(Calendar.MONTH, min);
+                cal.set(Calendar.HOUR_OF_DAY, _24hr);
+                cal.set(Calendar.MINUTE, min);
 
                 //https://developer.android.com/reference/java/text/SimpleDateFormat.html
                 //https://stackoverflow.com/questions/2659954/timepickerdialog-and-am-or-pm
@@ -109,12 +117,27 @@ public class Task extends AppCompatActivity {
                         (
                                 Task.this,
                                 timeChangeListener,
-                                cal.get(Calendar.HOUR),
+                                cal.get(Calendar.HOUR),  //auto converts 24hr  time into 12hr time. But we need to set AM/PM
                                 cal.get(Calendar.MINUTE),
                                 false
                         ).show();
             }
         });
+        //endregion
+
+        //region >>> if editing existing task then pre-populate date & time for that task from db
+        if(isEditing)
+        {
+            //read values from bd for that particular task
+            Cursor c = db.getRow(String.valueOf(taskId));
+            c.moveToFirst();
+            int dt = c.getInt(c.getColumnIndex("_datetime"));
+            String desc = c.getString(c.getColumnIndex("_desc"));
+            //set calendar time to time in db
+            cal.setTimeInMillis(dt * 1000L);
+            //set description text
+            descTxtV.setText(desc);
+        }
         updateDateTxtV();//set current date as soon as activity loads
         updateTimeTxtV();
         //endregion
@@ -136,8 +159,8 @@ public class Task extends AppCompatActivity {
     private void updateTimeTxtV()
     {
         String timeFormat ="hh:mm aaa";//12:08 PM
-        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.CANADA);
-        timeStr = sdf.format(cal.getTime());
+        SimpleDateFormat stf = new SimpleDateFormat(timeFormat, Locale.CANADA);
+        timeStr = stf.format(cal.getTime());
         timeTxtV.setText(timeStr);
 
         //unix datetime for saving in db
@@ -146,6 +169,19 @@ public class Task extends AppCompatActivity {
 
     //Save Task
     public void btnClick_saveTask(View view)
+    {
+        if(!isEditing)
+        {
+            SaveNewTask();
+        }
+        else if(isEditing)
+        {
+            UpdateExistingTask();
+        }
+    }
+
+    //Save new task to db
+    private void SaveNewTask()
     {
         //Get fresh copy of text from task description box
         descriptionStr = descTxtV.getText().toString();
@@ -192,8 +228,31 @@ public class Task extends AppCompatActivity {
         {
             Toast.makeText(this, "Description is empty" , Toast.LENGTH_LONG).show();
         }
+    }
 
+    //Modify existing task
+    private void UpdateExistingTask()
+    {
+        descriptionStr = descTxtV.getText().toString();
+        if(!descriptionStr.trim().equals(""))
+        {
+            //save to database
+            insertValues.put("_desc", descriptionStr);
+            insertValues.put("_datetime", dateTimeUnix);
+            rowsAffected =  db.updateRow(insertValues,String.valueOf(taskId));
 
+            Toast.makeText(this, rowsAffected + " row updated for ID: " + taskId, Toast.LENGTH_LONG).show();
+
+            //move back to main activity
+            Intent i = new Intent(this, Main.class);
+            //temporary testing activity
+            //Intent i = new Intent(this, Testing.class);
+            startActivity(i);
+        }
+        else
+        {
+            Toast.makeText(this, "Description is empty" , Toast.LENGTH_LONG).show();
+        }
 
     }
 }

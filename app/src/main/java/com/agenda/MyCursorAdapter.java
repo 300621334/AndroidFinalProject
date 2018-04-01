@@ -64,6 +64,7 @@ public class MyCursorAdapter extends CursorAdapter
         txtDateV.setText(taskDateStr);
         MyClkListener listen = new MyClkListener(taskID, db, this, parent, cursor);
         btnDeleteTask.setOnClickListener(listen);
+        txtDescV.setOnClickListener(listen);
         return v;
     }
 
@@ -112,25 +113,37 @@ public class MyCursorAdapter extends CursorAdapter
         @Override
         public void onClick(View view)
         {
-            //get context
-            ctx = view.getContext();
+            if(view instanceof Button)
+            {
+                //get context
+                ctx = view.getContext();
 
-            //delete row from db
-            rowsAffected = db.deleteRow(taskIdStr);
-            Toast.makeText(ctx, rowsAffected + " rows deleted", Toast.LENGTH_LONG).show();
+                //delete row from db
+                rowsAffected = db.deleteRow(taskIdStr);
+                Toast.makeText(ctx, rowsAffected + " rows deleted", Toast.LENGTH_LONG).show();
 
-            //Intent i = new Intent(ctx, Task.class);
-            SharedPreferences prefs = ctx.getSharedPreferences("tasks",0);
-            prefs.edit().putInt("taskID", taskID).commit();
-            //ctx.startActivity(i);
-            //((Activity)ctx).finish();
+                //Intent i = new Intent(ctx, Task.class);
+                SharedPreferences prefs = ctx.getSharedPreferences("tasks",0);
+                prefs.edit().putInt("taskID", taskID).commit();
+                //ctx.startActivity(i);
+                //((Activity)ctx).finish();
 
-            //refresh ListView
-            cursor.requery();
-            curAdapter.notifyDataSetChanged();//not refreshing!!!
+                //refresh ListView
+                cursor.requery();
+                curAdapter.notifyDataSetChanged();//not refreshing!!!
 
-            //curAdapter.runQueryOnBackgroundThread(null);
-            //v.invalidateViews();//not refreshing!!!
+                //curAdapter.runQueryOnBackgroundThread(null);
+                //v.invalidateViews();//not refreshing!!!
+            }
+            else if(view instanceof TextView)
+            {
+                ctx = view.getContext();
+
+                Intent i = new Intent(ctx, Task.class);
+                i.putExtra("taskId", taskId);
+                ctx.startActivity(i);
+            }
+
         }
     }
 }
