@@ -56,6 +56,13 @@
             android:text="Add New Task" />
 
         <Button
+            android:id="@+id/btnSMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMS"
+            android:onClick="btn_StartSmsActivity"/>
+
+        <Button
             android:id="@+id/button"
             android:enabled="false"
             android:layout_width="match_parent"

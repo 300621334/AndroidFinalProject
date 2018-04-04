@@ -168,6 +168,8 @@ public class Main extends AppCompatActivity {
         new ReadJSONFeedTask().execute(url);
     }
 
+
+
     //Async Task
     private class ReadJSONFeedTask extends AsyncTask<String, Void, String>//must b sub-class. Perform background operations and publish results on the UI thread without having to manipulate threads
     {
@@ -264,5 +266,9 @@ public class Main extends AppCompatActivity {
         getApplication().deleteDatabase("myDb");
     }
 
-
+    //start activity to send SMS
+    public void btn_StartSmsActivity(View view)
+    {
+        startActivity(new Intent(this, SMS.class));
+    }
 }
