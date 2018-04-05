@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;//checkSelfPermission(Manifest.permission.SEND_SMS)
 
 import org.w3c.dom.Text;
 
@@ -146,10 +149,56 @@ public class SMS extends AppCompatActivity
         phoneNum = txtPhV.getText().toString().trim();
         smsTxt = txtSmsV.getText().toString().trim();
 
+        //check for SMS permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)//M for Marshmallow // Check Permission fails on Android OSes below Marshmallow
+        {
+            if(checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)//import android.Manifest;//https://stackoverflow.com/questions/35056911/cannot-find-symbol-variable-send-sms
+            {
+                requestPermissions(new String[] {Manifest.permission.SEND_SMS}, 1);//1 could be any value that is returned as "requestCode" in onRequestPermissionsResult(), if user grants permission
+            }
+            else
+            {
+                SendSMS();
+            }
+        }
+
+
+    }
+
+    //method to send SMS
+    private void SendSMS()
+    {
         SmsManager smsMgr = SmsManager.getDefault();
         smsMgr.sendTextMessage(phoneNum,null, smsTxt, notifySmsSent, null);//add permissions to use send SMS
     }
 
+    //check is user granted permission for SMS
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case 1:
+            {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)//https://stackoverflow.com/questions/33666071/android-marshmallow-request-permission
+                {
+                    // permission was granted, yay!
+                    SendSMS();
+                }
+                else
+                {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "Permission denied for SMS", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    //Sub-Clss for receiving SMS
     private class SMSReceiver extends BroadcastReceiver
     {
         private Bundle bundle;
@@ -186,7 +235,8 @@ public class SMS extends AppCompatActivity
 
         private SmsMessage getIncomingMessage(Object aObject, Bundle bundle) {
             SmsMessage currentSMS;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)//M for Marshmallow
+            {
                 String format = bundle.getString("format");
                 currentSMS = SmsMessage.createFromPdu((byte[]) aObject, format);
             } else {

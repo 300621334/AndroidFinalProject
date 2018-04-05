@@ -88,7 +88,8 @@ public class Main extends AppCompatActivity {
         //set CursorAdapter for ListView
         myCurAdaptor = new MyCursorAdapter(this, cursor);
         listV.setAdapter(myCurAdaptor);
-
+        //to do db ops in AsyncTask : //https://stackoverflow.com/questions/16293022/how-to-perform-database-operations-using-async-task
+        //db.close();//this stops immediate removal of tasks when deleted!!!!!!
         //region >>> Leave empty listener or else app crashes!!! - refreshing the list after an item deleted is NOT working
   /*      myCurAdaptor.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -168,8 +169,6 @@ public class Main extends AppCompatActivity {
         Log.d("URL",url);
         new ReadJSONFeedTask().execute(url);
     }
-
-
 
     //Async Task
     private class ReadJSONFeedTask extends AsyncTask<String, Void, String>//must b sub-class. Perform background operations and publish results on the UI thread without having to manipulate threads
