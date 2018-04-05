@@ -1,5 +1,6 @@
 package com.agenda;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +60,7 @@ public class Main extends AppCompatActivity {
     private String address = "M1G3S6";
     private TextView txtDisplayWeather;
     String weatherStr;
+    AlertDialog.Builder alert;
     //endregion
 
     @Override
@@ -86,7 +88,6 @@ public class Main extends AppCompatActivity {
         //set CursorAdapter for ListView
         myCurAdaptor = new MyCursorAdapter(this, cursor);
         listV.setAdapter(myCurAdaptor);
-
 
         //region >>> Leave empty listener or else app crashes!!! - refreshing the list after an item deleted is NOT working
   /*      myCurAdaptor.registerDataSetObserver(new DataSetObserver() {
@@ -263,6 +264,10 @@ public class Main extends AppCompatActivity {
     //for debugging ONLY. Delete whole DB
     public void DeleteWholeDB(View view)
     {
+        //alert dialogue before deleting db
+        alert = new AlertDialog.Builder(this);//https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
+        alert.setTitle("About to delete database!").setMessage("Are you sure you want to delete all tasks?").show();
+
         getApplication().deleteDatabase("myDb");
     }
 

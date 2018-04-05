@@ -10,15 +10,24 @@
     <EditText
         android:id="@+id/txtPhone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="0.1"
         android:ems="10"
         android:hint="Enter phone number"
         android:inputType="phone" />
 
+    <!--https://stackoverflow.com/questions/4233626/allow-multi-line-in-edittext-view-in-android-->
     <EditText
         android:id="@+id/txtSendSMS"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dip"
+        android:layout_weight="0.3"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:minLines="6"
+        android:gravity="top|left"
+        android:maxLines="10"
+        android:scrollbars="vertical"
         android:background="@color/cast_intro_overlay_button_background_color" />
 
     <Button
@@ -28,4 +37,11 @@
         android:layout_gravity="center"
         android:onClick="btn_SendSMS"
         android:text="SEND  SMS" />
+
+    <TextView
+        android:id="@+id/txtSmsReceived"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="0.3"
+        android:background="@color/colorTaskDesc"/>
 </LinearLayout>
