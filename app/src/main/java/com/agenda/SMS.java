@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -56,6 +57,9 @@ public class SMS extends AppCompatActivity
 
         //for incoming SMS
         otp=new SMSReceiver();
+
+        //ask for permission to use SMS
+        grant_permission();
     }
 
     //once activity comes into fg
@@ -136,7 +140,7 @@ public class SMS extends AppCompatActivity
     {
         super.onPause();
         unregisterReceiver(listenToSmsSent);
-        unregisterReceiver(listenToSmsReceived);
+        //unregisterReceiver(listenToSmsReceived);
 
 
         //for incoming SMS
@@ -246,5 +250,31 @@ public class SMS extends AppCompatActivity
             return currentSMS;
         }//getIncomingMessage()
     }//class SMSReceiver
+
+    //ask for permission to use SMS
+    private void grant_permission()
+    {
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {android.Manifest.permission.SEND_SMS};
+
+        if (!hasPermissions(this, PERMISSIONS))
+        {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+    }
+    public static boolean hasPermissions(Context context, String... permissions)
+    {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null)
+        {
+            for (String permission : permissions)
+            {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 }//class SMS

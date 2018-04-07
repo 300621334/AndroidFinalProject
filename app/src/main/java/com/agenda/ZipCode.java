@@ -37,7 +37,7 @@ public class ZipCode extends AppCompatActivity {
         }
 
 
-        Intent i = new Intent(this, Main.class);
+        Intent i = new Intent(this, ToDo.class);
         startActivity(i);
     }
 }

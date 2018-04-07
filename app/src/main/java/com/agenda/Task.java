@@ -14,11 +14,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 //import java.util.Date;
 import java.util.Locale;
@@ -219,7 +215,7 @@ public class Task extends AppCompatActivity {
             Toast.makeText(this, "Row created with ID:" + rowsIdCreated, Toast.LENGTH_LONG).show();
 
             //move back to main activity
-            Intent i = new Intent(this, Main.class);
+            Intent i = new Intent(this, ToDo.class);
             //temporary testing activity
             //Intent i = new Intent(this, Testing.class);
             startActivity(i);
@@ -244,7 +240,7 @@ public class Task extends AppCompatActivity {
             Toast.makeText(this, rowsAffected + " row updated for ID: " + taskId, Toast.LENGTH_LONG).show();
 
             //move back to main activity
-            Intent i = new Intent(this, Main.class);
+            Intent i = new Intent(this, ToDo.class);
             //temporary testing activity
             //Intent i = new Intent(this, Testing.class);
             startActivity(i);
